@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:izb_ui/root_widget.dart';
+import 'package:izb_ui/nest_widget.dart';
 
 void main() {
   runApp(
@@ -15,7 +15,7 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       home: Scaffold(
-        body: RootWidget(),
+        body: NestWidget(pId: 0),
       ),
     );
   }

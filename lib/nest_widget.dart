@@ -2,25 +2,31 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:izb_ui/provider/node_provider.dart';
 
-class RootWidget extends ConsumerWidget {
-  const RootWidget({super.key});
+class NestWidget extends ConsumerWidget {
+  final int pId;
+
+  const NestWidget({
+    required this.pId,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final root = ref.watch(rootProvider);
+    final root = ref.watch(nestProvider(pId));
 
     return root.when(
-      data: (root) => ListView.builder(
-        itemCount: root.length,
+      data: (data) => ListView.builder(
+        shrinkWrap: true,
+        itemCount: data.length,
         itemBuilder: (context, index) {
-          final node = root[index];
+          final node = data[index];
           if (node.nested) {
             return ExpansionTile(
               title: Text(node.nodeName),
               subtitle: Text(node.nested.toString()),
               expandedAlignment: Alignment.centerLeft,
               childrenPadding: const EdgeInsets.only(left: 32.0),
-              children: const [Text("FF"), Text("AA")],
+              children: [NestWidget(pId: node.nodeId)],
             );
           } else {
             return ListTile(
@@ -31,7 +37,15 @@ class RootWidget extends ConsumerWidget {
         },
       ),
       error: (_, __) => const Text('Ошибка'),
-      loading: () => const Center(child: CircularProgressIndicator()),
+      loading: () => const Padding(
+        padding: EdgeInsets.all(8.0),
+        child: Center(
+          child: SizedBox.square(
+            dimension: 16.0,
+            child: CircularProgressIndicator(),
+          ),
+        ),
+      ),
     );
   }
 }
