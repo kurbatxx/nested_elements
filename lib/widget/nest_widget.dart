@@ -21,14 +21,14 @@ class NestWidget extends ConsumerWidget {
         itemCount: data.length,
         itemBuilder: (context, index) {
           final node = data[index];
-          if (node.nested || node.streets_uuid != null) {
+          if (node.nested || node.streetsUuid != null) {
             return ExpansionTile(
               title: Text(node.nodeName),
               subtitle: Text(node.nested.toString()),
               expandedAlignment: Alignment.centerLeft,
               childrenPadding: const EdgeInsets.only(left: 32.0),
-              children: node.streets_uuid != null
-                  ? [StreetsWidget(uuid: node.streets_uuid ?? '')]
+              children: node.streetsUuid != null
+                  ? [StreetsWidget(uuid: node.streetsUuid ?? '')]
                   : [NestWidget(pId: node.nodeId)],
             );
           } else {

@@ -1,33 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:izb_ui/provider/streets_provider.dart';
-import 'package:izb_ui/widget/buildings_widget.dart';
+import 'package:izb_ui/provider/building_provider.dart';
 
-class StreetsWidget extends ConsumerWidget {
-  final String uuid;
+class BuildingsWidget extends ConsumerWidget {
+  final int sId;
 
-  const StreetsWidget({
-    required this.uuid,
+  const BuildingsWidget({
+    required this.sId,
     super.key,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final root = ref.watch(streetsProvider(uuid));
+    final root = ref.watch(buildingsProvider(sId));
 
     return root.when(
       data: (data) => ListView.builder(
         shrinkWrap: true,
         itemCount: data.length,
         itemBuilder: (context, index) {
-          final street = data[index];
+          final building = data[index];
 
-          return ExpansionTile(
-            title: Text(street.streetName),
-            subtitle: Text(street.streetUuid),
-            expandedAlignment: Alignment.centerLeft,
-            childrenPadding: const EdgeInsets.only(left: 32.0),
-            children: [BuildingsWidget(sId: street.streetId)],
+          return ListTile(
+            title: Text(building.buildingName),
+            subtitle: Text(building.streetId.toString()),
           );
         },
       ),
