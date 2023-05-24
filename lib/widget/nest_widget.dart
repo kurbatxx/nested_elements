@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:izb_ui/provider/node_provider.dart';
+import 'package:izb_ui/widget/streets_widget.dart';
 
 class NestWidget extends ConsumerWidget {
   final int pId;
@@ -20,13 +21,15 @@ class NestWidget extends ConsumerWidget {
         itemCount: data.length,
         itemBuilder: (context, index) {
           final node = data[index];
-          if (node.nested) {
+          if (node.nested || node.streets_uuid != null) {
             return ExpansionTile(
               title: Text(node.nodeName),
               subtitle: Text(node.nested.toString()),
               expandedAlignment: Alignment.centerLeft,
               childrenPadding: const EdgeInsets.only(left: 32.0),
-              children: [NestWidget(pId: node.nodeId)],
+              children: node.streets_uuid != null
+                  ? [StreetsWidget(uuid: node.streets_uuid ?? '')]
+                  : [NestWidget(pId: node.nodeId)],
             );
           } else {
             return ListTile(

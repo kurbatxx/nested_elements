@@ -17,6 +17,7 @@ class Node with _$Node {
     @JsonKey(name: 'node_id') required int nodeId,
     @JsonKey(name: 'parrent_id') required int parrentId,
     @JsonKey(name: 'node_name') required String nodeName,
+    @JsonKey(name: 'streets_uuid') required String? streets_uuid,
     required bool nested,
   }) = _Node;
 
