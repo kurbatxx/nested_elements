@@ -26,7 +26,7 @@ class StreetsWidget extends ConsumerWidget {
             title: Text(street.streetName),
             subtitle: Text(street.streetUuid),
             expandedAlignment: Alignment.centerLeft,
-            childrenPadding: const EdgeInsets.only(left: 32.0),
+            childrenPadding: const EdgeInsets.only(left: 16.0),
             children: [BuildingsWidget(sId: street.streetId)],
           );
         },

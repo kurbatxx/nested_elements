@@ -15,18 +15,21 @@ class BuildingsWidget extends ConsumerWidget {
     final root = ref.watch(buildingsProvider(sId));
 
     return root.when(
-      data: (data) => ListView.builder(
-        shrinkWrap: true,
-        itemCount: data.length,
-        itemBuilder: (context, index) {
-          final building = data[index];
-
-          return ListTile(
-            title: Text(building.buildingName),
-            subtitle: Text(building.streetId.toString()),
-          );
-        },
-      ),
+      data: (data) =>
+          Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+        Wrap(
+          spacing: 16.0,
+          children: [
+            for (final item in data)
+              Chip(
+                label: Text(item.buildingName),
+              )
+          ],
+        ),
+        UnconstrainedBox(
+          child: FilledButton(onPressed: () {}, child: const Text('Жми')),
+        )
+      ]),
       error: (_, __) => const Text('Ошибка'),
       loading: () => const Padding(
         padding: EdgeInsets.all(8.0),
