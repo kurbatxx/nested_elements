@@ -61,7 +61,6 @@ class NestWidget extends HookConsumerWidget {
                     subtitle: Text(node.nested.toString()),
                     trailing: FilledButton(
                       onPressed: () async {
-                        // no refresh parent
                         await ref.read(apiProvider).dropElement(node);
                       },
                       child: const Text('Удалить'),
