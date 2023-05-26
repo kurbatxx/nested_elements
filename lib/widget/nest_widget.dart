@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:izb_ui/api/api.dart';
+import 'package:izb_ui/model/node/node.dart';
 import 'package:izb_ui/provider/node_provider.dart';
 import 'package:izb_ui/widget/streets_widget.dart';
 
@@ -56,16 +57,7 @@ class NestWidget extends HookConsumerWidget {
                         : [NestWidget(pId: node.nodeId)],
                   );
                 } else {
-                  return ListTile(
-                    title: Text(node.nodeName),
-                    subtitle: Text(node.nested.toString()),
-                    trailing: FilledButton(
-                      onPressed: () async {
-                        await ref.read(apiProvider).dropElement(node);
-                      },
-                      child: const Text('Удалить'),
-                    ),
-                  );
+                  return EmptyNode(node: node);
                 }
               },
             ),
@@ -83,5 +75,57 @@ class NestWidget extends HookConsumerWidget {
         ),
       ),
     );
+  }
+}
+
+enum Edit {
+  edit,
+  noEdit,
+}
+
+class EmptyNode extends HookConsumerWidget {
+  const EmptyNode({
+    super.key,
+    required this.node,
+  });
+
+  final Node node;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = useState<Edit>(Edit.noEdit);
+
+    return ListTile(
+        title: Text(node.nodeName),
+        subtitle: switch (state.value) {
+          Edit.edit => Text(node.nested.toString()),
+          Edit.noEdit => Text('var2 '),
+        },
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            FilledButton(
+              onPressed: () => switch (state.value) {
+                Edit.edit => {
+                    state.value = Edit.noEdit,
+                    print("1"),
+                  },
+                Edit.noEdit => {
+                    {
+                      state.value = Edit.edit,
+                      print("2"),
+                    },
+                  }
+              },
+              child: const Text('Добавить подкаталог'),
+            ),
+            FilledButton(
+              onPressed: () async {
+                await ref.read(apiProvider).dropElement(node);
+              },
+              child: const Text('Удалить'),
+            ),
+          ],
+        ));
   }
 }
