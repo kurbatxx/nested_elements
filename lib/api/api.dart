@@ -26,16 +26,33 @@ class Api {
     final _ = ref.refresh(nodeProvider(pId));
   }
 
+  Future<void> createNestElement(Node node, String name) async {
+    await Future.delayed(const Duration(seconds: 1));
+
+    final url = Uri.http(ref.read(ipProvider), '/create_node');
+    await http.post(
+      url,
+      headers: {"Content-Type": "application/json"},
+      body: json.encode({"parrent_id": node.nodeId, "node_name": name}),
+    );
+
+    final _ = ref.refresh(nodeProvider(node.parrentId));
+    ref.invalidate(nodeProvider(node.nodeId));
+  }
+
   Future<void> dropElement(Node node) async {
     await Future.delayed(const Duration(seconds: 1));
 
     final url = Uri.http(ref.read(ipProvider), '/drop_node/${node.nodeId}');
+    print(node.nodeId);
     final response = await http.post(url);
 
     Remove remove =
         Remove.fromJson(json.decode(utf8.decode(response.bodyBytes)));
 
+    print(remove.count);
     if (remove.count == 0) {
+      print(remove.parrentId);
       final _ = ref.refresh(nodeProvider(remove.parrentId));
     }
     final _ = ref.refresh(nodeProvider(node.parrentId));
