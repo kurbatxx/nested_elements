@@ -100,6 +100,11 @@ enum Edit {
   noEdit,
 }
 
+enum Item {
+  catalog,
+  street,
+}
+
 class EmptyNode extends HookConsumerWidget {
   const EmptyNode({
     super.key,
@@ -112,6 +117,8 @@ class EmptyNode extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final editSwither = useState<Edit>(Edit.noEdit);
     final visible = useState(Visible.hide);
+    final item = useState(Item.catalog);
+    //
     final editcontroller = useTextEditingController(text: '');
     final focus = useFocusNode();
 
@@ -135,11 +142,24 @@ class EmptyNode extends HookConsumerWidget {
                 children: [
                   switch (editSwither.value) {
                     Edit.edit => const SizedBox(),
-                    Edit.noEdit => FilledButton(
-                        onPressed: () {
-                          editSwither.value = Edit.edit;
-                        },
-                        child: const Text('Добавить подкаталог'))
+                    Edit.noEdit => Row(
+                        children: [
+                          FilledButton(
+                            onPressed: () {
+                              editSwither.value = Edit.edit;
+                              item.value = Item.street;
+                            },
+                            child: const Text('Добавить улицу'),
+                          ),
+                          FilledButton(
+                            onPressed: () {
+                              editSwither.value = Edit.edit;
+                              item.value = Item.catalog;
+                            },
+                            child: const Text('Добавить подкаталог'),
+                          ),
+                        ],
+                      )
                   },
                   FilledButton(
                     onPressed: () async {
@@ -159,15 +179,23 @@ class EmptyNode extends HookConsumerWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: switch (editSwither.value) {
             Edit.edit => TextFormField(
-                onFieldSubmitted: (value) async => {
-                  await ref
-                      .read(apiProvider)
-                      .createNestElement(node, editcontroller.text),
+                onFieldSubmitted: (_) async => {
+                  switch (item.value) {
+                    Item.catalog => await ref
+                        .read(apiProvider)
+                        .createNestElement(node, editcontroller.text),
+                    Item.street => await ref
+                        .read(apiProvider)
+                        .createStreet(node, editcontroller.text),
+                  },
                   editcontroller.clear(),
                   editSwither.value = Edit.noEdit
                 },
                 controller: editcontroller,
-                decoration: crInputDec('Введите название подкаталога'),
+                decoration: crInputDec(switch (item.value) {
+                  Item.catalog => 'Введите название подкаталога',
+                  Item.street => 'Введите название улицы',
+                }),
                 autofocus: true,
                 focusNode: focus,
               ),

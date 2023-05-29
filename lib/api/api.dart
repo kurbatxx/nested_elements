@@ -44,17 +44,28 @@ class Api {
     await Future.delayed(const Duration(seconds: 1));
 
     final url = Uri.http(ref.read(ipProvider), '/drop_node/${node.nodeId}');
-    print(node.nodeId);
     final response = await http.post(url);
 
     Remove remove =
         Remove.fromJson(json.decode(utf8.decode(response.bodyBytes)));
 
-    print(remove.count);
     if (remove.count == 0) {
-      print(remove.parrentId);
       final _ = ref.refresh(nodeProvider(remove.parrentId));
     }
     final _ = ref.refresh(nodeProvider(node.parrentId));
+  }
+
+  Future<void> createStreet(Node node, String name) async {
+    await Future.delayed(const Duration(seconds: 1));
+
+    final url = Uri.http(ref.read(ipProvider), '/create_street');
+    await http.post(
+      url,
+      headers: {"Content-Type": "application/json"},
+      body: json.encode({"node_id": node.nodeId, "street_name": name}),
+    );
+
+    final _ = ref.refresh(nodeProvider(node.parrentId));
+    ref.invalidate(nodeProvider(node.nodeId));
   }
 }
