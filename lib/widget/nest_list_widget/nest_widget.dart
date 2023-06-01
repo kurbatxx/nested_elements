@@ -135,23 +135,13 @@ class HorizontalOption extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final menu = ref.watch(menuProvider(node));
 
-    //final menu = useState(Menu.hide);
-
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         switch (menu) {
           Menu.hide => FilledButton(
               onPressed: () {
-                ref.read(menuProvider(node).notifier).state = Menu.show;
-
-                final before = ref.read(beforeMenuProvider);
-                if (before != null) {
-                  ref.read(menuProvider(before).notifier).state = Menu.hide;
-                }
-                ref.read(beforeMenuProvider.notifier).state = node;
-
-                //menu.value = Menu.show;
+                ref.read(menuProvider(node).notifier).show(node);
               },
               child: const Text('option'),
             ),
@@ -171,9 +161,7 @@ class HorizontalOption extends HookConsumerWidget {
                 ),
                 FilledButton(
                   onPressed: () {
-                    ref.read(menuProvider(node).notifier).state = Menu.hide;
-                    ref.read(beforeMenuProvider.notifier).state = null;
-                    //menu.value = Menu.hide;
+                    ref.read(menuProvider(node).notifier).hide();
                   },
                   child: const Text('Скрыть'),
                 )
