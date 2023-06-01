@@ -26,9 +26,7 @@ class MenuNotifier extends Notifier<Menu> {
   }
 }
 
-final menuProvider = NotifierProvider.family<MenuNotifier, Menu, Node>(() {
-  return MenuNotifier();
-});
+final menuProvider =
+    NotifierProvider.family<MenuNotifier, Menu, Node>(MenuNotifier.new);
 
-//final menuProvider = StateProvider.family<Menu, Node>((ref, node) => Menu.hide);
 final beforeMenuProvider = StateProvider<Node?>((ref) => null);

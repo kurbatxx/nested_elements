@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/widgets.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:izb_ui/model/building/building.dart';
 import 'package:izb_ui/model/node/node.dart';
