@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:izb_ui/widget/nest_list_widget/nest_widget.dart';
+import 'package:izb_ui/widget/nest_list_widget/nest_list_widget.dart';
 
 void main() {
   runApp(

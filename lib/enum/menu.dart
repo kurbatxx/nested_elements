@@ -1,0 +1,4 @@
+enum Menu {
+  show,
+  hide,
+}

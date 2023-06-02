@@ -1,23 +1,23 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:izb_ui/enum/menu.dart';
 import 'package:izb_ui/model/node/node.dart';
-import 'package:izb_ui/widget/nest_list_widget/nest_widget.dart';
 
-//final menuProvider = StateProvider.family<Menu, Node>((ref, node) => Menu.hide);
-
-class MenuNotifier extends Notifier<Menu> {
+class MenuNotifier extends FamilyNotifier<Menu, Node> {
   @override
-  Menu build() {
+  Menu build(Node arg) {
     return Menu.hide;
   }
 
-  void show(Node node) {
-    state = Menu.show;
-
+  void show() {
+    // hide previous menu
     final before = ref.read(beforeMenuProvider);
     if (before != null) {
       ref.read(menuProvider(before).notifier).state = Menu.hide;
     }
-    ref.read(beforeMenuProvider.notifier).state = node;
+
+    state = Menu.show;
+    //arg family value -- node
+    ref.read(beforeMenuProvider.notifier).state = arg;
   }
 
   void hide() {
