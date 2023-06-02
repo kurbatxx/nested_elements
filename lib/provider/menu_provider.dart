@@ -1,6 +1,8 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:izb_ui/enum/menu.dart';
+import 'package:izb_ui/enum/mode.dart';
 import 'package:izb_ui/model/node/node.dart';
+import 'package:izb_ui/provider/mode_provider.dart';
 
 class MenuNotifier extends FamilyNotifier<Menu, Node> {
   @override
@@ -13,6 +15,11 @@ class MenuNotifier extends FamilyNotifier<Menu, Node> {
     final before = ref.read(beforeMenuProvider);
     if (before != null) {
       ref.read(menuProvider(before).notifier).state = Menu.hide;
+    }
+
+    final beforeMode = ref.read(beforeModeProvider);
+    if (beforeMode != null) {
+      ref.read(modeProvider(beforeMode).notifier).state = Mode.noEdit;
     }
 
     state = Menu.show;

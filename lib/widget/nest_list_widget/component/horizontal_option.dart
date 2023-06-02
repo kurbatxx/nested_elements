@@ -3,6 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:izb_ui/enum/menu.dart';
 import 'package:izb_ui/model/node/node.dart';
 import 'package:izb_ui/provider/menu_provider.dart';
+import 'package:izb_ui/provider/mode_provider.dart';
 
 class HorizontalOption extends HookConsumerWidget {
   const HorizontalOption(this.node, {super.key});
@@ -30,7 +31,9 @@ class HorizontalOption extends HookConsumerWidget {
                   child: const Text('Создать подкаталог'),
                 ),
                 FilledButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    ref.read(modeProvider(node).notifier).setEdit();
+                  },
                   child: const Text('Редактировать'),
                 ),
                 FilledButton(
