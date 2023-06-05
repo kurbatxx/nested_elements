@@ -8,6 +8,11 @@ class Common {
   final Ref ref;
   const Common(this.ref);
 
+  void setDefault() {
+    modeDefault();
+    menuDefault();
+  }
+
   void modeDefault() {
     final before = ref.read(beforeModeProvider);
     if (before != null) {

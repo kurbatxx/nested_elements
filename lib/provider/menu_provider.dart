@@ -11,9 +11,7 @@ class MenuNotifier extends FamilyNotifier<Menu, Node> {
 
   void show() {
     // hide previous menu
-    ref.read(commonProvider).modeDefault();
-    ref.read(commonProvider).menuDefault();
-
+    ref.read(commonProvider).setDefault();
     state = Menu.show;
     //arg family value -- node
     ref.read(beforeMenuProvider.notifier).state = arg;

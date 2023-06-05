@@ -10,9 +10,7 @@ class ModeNotifier extends FamilyNotifier<Mode, Node> {
   }
 
   void setEdit() {
-    ref.read(commonProvider).modeDefault();
-    ref.read(commonProvider).menuDefault();
-
+    ref.read(commonProvider).setDefault();
     state = Mode.edit;
 
     //arg family value -- node
