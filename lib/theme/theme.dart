@@ -10,3 +10,10 @@ InputDecoration crInputDec(String hint) {
     isCollapsed: true,
   );
 }
+
+Transform crOffset(Widget child) {
+  return Transform.translate(
+    offset: const Offset(-48 - 4 + 24, 0),
+    child: child,
+  );
+}

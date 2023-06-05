@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:izb_ui/api/api.dart';
 import 'package:izb_ui/enum/menu.dart';
+import 'package:izb_ui/enum/node_type.dart';
 import 'package:izb_ui/model/node/node.dart';
 import 'package:izb_ui/provider/menu_provider.dart';
 import 'package:izb_ui/provider/mode_provider.dart';
@@ -27,8 +28,21 @@ class HorizontalOption extends HookConsumerWidget {
             ),
           Menu.show => Row(
               children: [
+                if (!node.nested)
+                  FilledButton(
+                    onPressed: () {
+                      ref
+                          .read(modeProvider(node).notifier)
+                          .setCreate(type: NodeType.street);
+                    },
+                    child: const Text('Добавить улицу'),
+                  ),
                 FilledButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    ref
+                        .read(modeProvider(node).notifier)
+                        .setCreate(type: NodeType.node);
+                  },
                   child: const Text('Создать подкаталог'),
                 ),
                 FilledButton(
