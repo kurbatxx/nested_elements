@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:izb_ui/api/api.dart';
 import 'package:izb_ui/enum/mode.dart';
+import 'package:izb_ui/provider/loading_state_provider.dart';
 import 'package:izb_ui/theme/theme.dart';
 
 class AddElementButton extends HookConsumerWidget {
@@ -12,6 +13,8 @@ class AddElementButton extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isLoading = ref.watch(loadingStateProvider);
+
     final editcontroller = useTextEditingController(text: '');
     final mode = useState(Mode.noEdit);
 
@@ -35,7 +38,7 @@ class AddElementButton extends HookConsumerWidget {
               editcontroller.clear(),
               mode.value = Mode.noEdit,
             },
-            decoration: crInputDec('Введите название элемента'),
+            decoration: crInputDec('Введите название элемента', isLoading),
             autofocus: true,
             focusNode: focus,
           ),

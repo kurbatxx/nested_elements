@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-InputDecoration crInputDec(String hint) {
+InputDecoration crInputDec(String hint, bool isLoading) {
   return InputDecoration(
     hintText: hint,
     contentPadding: const EdgeInsetsDirectional.all(10),
@@ -8,6 +8,12 @@ InputDecoration crInputDec(String hint) {
       borderSide: BorderSide(width: 3, color: Colors.greenAccent),
     ),
     isCollapsed: true,
+    suffix: isLoading
+        ? const SizedBox.square(
+            dimension: 16.0,
+            child: CircularProgressIndicator(),
+          )
+        : null,
   );
 }
 

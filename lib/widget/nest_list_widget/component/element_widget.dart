@@ -6,7 +6,9 @@ import 'package:izb_ui/enum/mode.dart';
 import 'package:izb_ui/enum/node_type.dart';
 import 'package:izb_ui/model/node/node.dart';
 import 'package:izb_ui/provider/common_provider.dart';
+import 'package:izb_ui/provider/loading_state_provider.dart';
 import 'package:izb_ui/provider/mode_provider.dart';
+import 'package:izb_ui/provider/node_provider.dart';
 import 'package:izb_ui/provider/node_type_provider.dart';
 import 'package:izb_ui/theme/theme.dart';
 import 'package:izb_ui/widget/nest_list_widget/component/horizontal_option.dart';
@@ -22,6 +24,7 @@ class ElementWidget extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final mode = ref.watch(modeProvider(node));
     final nodeType = ref.watch(nodeTypeProvider);
+    final isLoading = ref.watch(loadingStateProvider);
 
     final textController = useTextEditingController(text: node.nodeName);
     final focus = useFocusNode();
@@ -31,7 +34,7 @@ class ElementWidget extends HookConsumerWidget {
     useEffect(() {
       if (!focus.hasFocus) {
         textController.text = node.nodeName;
-        createController.text = node.nodeName;
+        createController.text = '';
       }
 
       return null;
@@ -40,11 +43,13 @@ class ElementWidget extends HookConsumerWidget {
     final Widget createField = switch (mode) {
       Mode.create => TextFormField(
           controller: createController,
-          decoration: crInputDec(switch (nodeType) {
-            NodeType.node => 'Введите название подкаталога',
-            NodeType.street => 'Введите название улицы',
-            _ => '',
-          }),
+          decoration: crInputDec(
+              switch (nodeType) {
+                NodeType.node => 'Введите название подкаталога',
+                NodeType.street => 'Введите название улицы',
+                _ => '',
+              },
+              isLoading),
           onFieldSubmitted: (_) {
             switch (nodeType) {
               case NodeType.node:
@@ -72,20 +77,24 @@ class ElementWidget extends HookConsumerWidget {
 
     final Widget name = switch (mode) {
       Mode.edit => TextFormField(
-          decoration: crInputDec(''),
+          decoration: crInputDec('', isLoading),
           controller: textController,
           autofocus: true,
           focusNode: focus,
-          onFieldSubmitted: (_) => {
-                ref.read(apiProvider).updateName(
-                      node,
-                      textController.text,
-                    ),
-              }),
+          onFieldSubmitted: (_) async {
+            // ref.read(apiProvider).updateName(
+            //       node,
+            //       textController.text,
+            //     ),
+
+            ref
+                .read(nodeProvider(node.parrentId).notifier)
+                .updateName(node, textController.text);
+          }),
       _ => Text(node.nodeName),
     };
 
-    if (node.nested) {
+    if (node.nested || node.streetsUuid != null) {
       return ExpansionTile(
         onExpansionChanged: (_) {
           ref.read(commonProvider).setDefault();

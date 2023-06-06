@@ -7,6 +7,7 @@ import 'package:izb_ui/model/remove/remove.dart';
 import 'package:izb_ui/provider/ip_provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:izb_ui/provider/node_provider.dart';
+import 'package:izb_ui/provider/streets_provider.dart';
 
 final apiProvider = Provider((ref) => Api(ref));
 
@@ -67,7 +68,9 @@ class Api {
     );
 
     final _ = ref.refresh(nodeProvider(node.parrentId));
-    ref.invalidate(nodeProvider(node.nodeId));
+    if (node.streetsUuid != null) {
+      final _ = ref.refresh(streetsProvider(node.streetsUuid!));
+    }
   }
 
   Future<void> updateName<T>(T element, String name) async {

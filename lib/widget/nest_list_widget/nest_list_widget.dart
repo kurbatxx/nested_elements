@@ -25,7 +25,7 @@ class NestListWidget extends HookConsumerWidget {
             final node = data[index];
             return ElementWidget(node);
           } else {
-            return AddElementButton(pId);
+            return pId == 0 ? AddElementButton(pId) : null;
           }
         },
       ),
