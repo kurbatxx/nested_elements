@@ -5,21 +5,25 @@
 //     "nested": false
 //   },
 
-import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:dart_mappable/dart_mappable.dart';
+part 'node.mapper.dart';
 
-part 'node.freezed.dart';
-part 'node.g.dart';
+@MappableClass()
+class Node with NodeMappable {
+  final int nodeId;
+  final int parrentId;
+  final String nodeName;
+  final String? streetsUuid;
+  final bool nested;
 
-@freezed
-class Node with _$Node {
-  //@JsonSerializable(explicitToJson: true)
-  const factory Node({
-    @JsonKey(name: 'node_id') required int nodeId,
-    @JsonKey(name: 'parrent_id') required int parrentId,
-    @JsonKey(name: 'node_name') required String nodeName,
-    @JsonKey(name: 'streets_uuid') required String? streetsUuid,
-    required bool nested,
-  }) = _Node;
+  Node({
+    @MappableField(key: 'node_id') required this.nodeId,
+    @MappableField(key: 'parrent_id') required this.parrentId,
+    @MappableField(key: 'node_name') required this.nodeName,
+    @MappableField(key: 'streets_uuid') required this.streetsUuid,
+    required this.nested,
+  });
 
-  factory Node.fromJson(Map<String, dynamic> json) => _$NodeFromJson(json);
+  static const fromMap = NodeMapper.fromMap;
+  //static const fromJson = NodeMapper.fromJson;
 }

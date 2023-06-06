@@ -2,10 +2,8 @@ import 'dart:convert';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:izb_ui/enum/node_type.dart';
-import 'package:izb_ui/model/building/building.dart';
 import 'package:izb_ui/model/node/node.dart';
 import 'package:izb_ui/model/remove/remove.dart';
-import 'package:izb_ui/model/street/street.dart';
 import 'package:izb_ui/provider/ip_provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:izb_ui/provider/node_provider.dart';
@@ -50,7 +48,7 @@ class Api {
     final response = await http.post(url);
 
     Remove remove =
-        Remove.fromJson(json.decode(utf8.decode(response.bodyBytes)));
+        RemoveMapper.fromJson(json.decode(utf8.decode(response.bodyBytes)));
 
     if (remove.count == 0) {
       final _ = ref.refresh(nodeProvider(remove.parrentId));

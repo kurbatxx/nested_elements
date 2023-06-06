@@ -1,15 +1,15 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:dart_mappable/dart_mappable.dart';
+part 'remove.mapper.dart';
 
-part 'remove.freezed.dart';
-part 'remove.g.dart';
+@MappableClass()
+class Remove with RemoveMappable {
+  final int count;
+  final int parrentId;
 
-@freezed
-class Remove with _$Remove {
-  //@JsonSerializable(explicitToJson: true)
-  const factory Remove({
-    @JsonKey(name: 'elements_count') required int count,
-    @JsonKey(name: 'parrent_id') required int parrentId,
-  }) = _Remove;
+  Remove({
+    @MappableField(key: 'elements_count') required this.count,
+    @MappableField(key: 'parrent_id') required this.parrentId,
+  });
 
-  factory Remove.fromJson(Map<String, dynamic> json) => _$RemoveFromJson(json);
+  static const fromMap = RemoveMapper.fromMap;
 }

@@ -1,17 +1,17 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:dart_mappable/dart_mappable.dart';
+part 'building.mapper.dart';
 
-part 'building.freezed.dart';
-part 'building.g.dart';
+@MappableClass()
+class Building with BuildingMappable {
+  final int buildingId;
+  final int streetId;
+  final String buildingName;
 
-@freezed
-class Building with _$Building {
-  //@JsonSerializable(explicitToJson: true)
-  const factory Building({
-    @JsonKey(name: 'building_id') required int buildingId,
-    @JsonKey(name: 'street_id') required int streetId,
-    @JsonKey(name: 'building_name') required String buildingName,
-  }) = _Building;
+  Building({
+    @MappableField(key: 'building_id') required this.buildingId,
+    @MappableField(key: 'street_id') required this.streetId,
+    @MappableField(key: 'building_name') required this.buildingName,
+  });
 
-  factory Building.fromJson(Map<String, dynamic> json) =>
-      _$BuildingFromJson(json);
+  static const fromMap = BuildingMapper.fromMap;
 }

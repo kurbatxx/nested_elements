@@ -4,19 +4,20 @@
 //     "street_name": "Букетова"
 //   }
 
-import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:dart_mappable/dart_mappable.dart';
+part 'street.mapper.dart';
 
-part 'street.freezed.dart';
-part 'street.g.dart';
+@MappableClass()
+class Street with StreetMappable {
+  final int streetId;
+  final String streetUuid;
+  final String streetName;
 
-@freezed
-class Street with _$Street {
-  //@JsonSerializable(explicitToJson: true)
-  const factory Street({
-    @JsonKey(name: 'street_id') required int streetId,
-    @JsonKey(name: 'street_uuid') required String streetUuid,
-    @JsonKey(name: 'street_name') required String streetName,
-  }) = _Street;
+  Street({
+    @MappableField(key: 'street_id') required this.streetId,
+    @MappableField(key: 'street_uuid') required this.streetUuid,
+    @MappableField(key: 'street_name') required this.streetName,
+  });
 
-  factory Street.fromJson(Map<String, dynamic> json) => _$StreetFromJson(json);
+  static const fromMap = StreetMapper.fromMap;
 }

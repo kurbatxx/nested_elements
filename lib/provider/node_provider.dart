@@ -11,7 +11,7 @@ final nodeProvider = FutureProvider.family<List<Node>, int>((ref, pId) async {
   final response = await http.get(url);
 
   List<dynamic> jsonList = json.decode(utf8.decode(response.bodyBytes)) as List;
-  List<Node> nodes = jsonList.map((e) => Node.fromJson(e)).toList();
+  List<Node> nodes = jsonList.map((e) => NodeMapper.fromMap(e)).toList();
 
   return nodes;
 });

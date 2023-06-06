@@ -8,13 +8,12 @@ import 'package:izb_ui/provider/ip_provider.dart';
 final streetsProvider =
     FutureProvider.family<List<Street>, String>((ref, uuid) async {
   await Future.delayed(const Duration(seconds: 1));
-  print(uuid);
 
   final url = Uri.http(ref.read(ipProvider), '/get_streets/$uuid');
   final response = await http.get(url);
 
   List<dynamic> jsonList = json.decode(utf8.decode(response.bodyBytes)) as List;
-  List<Street> streets = jsonList.map((e) => Street.fromJson(e)).toList();
+  List<Street> streets = jsonList.map((e) => StreetMapper.fromMap(e)).toList();
 
   return streets;
 });

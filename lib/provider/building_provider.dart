@@ -13,7 +13,8 @@ final buildingsProvider =
   final response = await http.get(url);
 
   List<dynamic> jsonList = json.decode(utf8.decode(response.bodyBytes)) as List;
-  List<Building> buildings = jsonList.map((e) => Building.fromJson(e)).toList();
+  List<Building> buildings =
+      jsonList.map((e) => BuildingMapper.fromJson(e)).toList();
 
   return buildings;
 });

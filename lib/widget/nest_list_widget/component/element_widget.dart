@@ -21,6 +21,7 @@ class ElementWidget extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final mode = ref.watch(modeProvider(node));
+    final nodeType = ref.watch(nodeTypeProvider);
 
     final textController = useTextEditingController(text: node.nodeName);
     final focus = useFocusNode();
@@ -39,13 +40,13 @@ class ElementWidget extends HookConsumerWidget {
     final Widget createField = switch (mode) {
       Mode.create => TextFormField(
           controller: createController,
-          decoration: crInputDec(switch (ref.read(nodeTypeProvider)) {
+          decoration: crInputDec(switch (nodeType) {
             NodeType.node => 'Введите название подкаталога',
             NodeType.street => 'Введите название улицы',
             _ => '',
           }),
           onFieldSubmitted: (_) {
-            switch (nodeType.value) {
+            switch (nodeType) {
               case NodeType.node:
                 {
                   ref
