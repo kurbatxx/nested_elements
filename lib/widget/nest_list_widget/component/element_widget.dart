@@ -32,7 +32,7 @@ class ElementWidget extends HookConsumerWidget {
     final createController = useTextEditingController(text: '');
 
     useEffect(() {
-      if (!focus.hasFocus) {
+      if (!focus.hasFocus && mode != Mode.edit) {
         textController.text = node.nodeName;
         createController.text = '';
       }
@@ -81,11 +81,8 @@ class ElementWidget extends HookConsumerWidget {
           controller: textController,
           autofocus: true,
           focusNode: focus,
-          onFieldSubmitted: (_) async {
-            // ref.read(apiProvider).updateName(
-            //       node,
-            //       textController.text,
-            //     ),
+          onFieldSubmitted: (value) async {
+            textController.text = value;
 
             ref
                 .read(nodeProvider(node.parrentId).notifier)
