@@ -8,8 +8,19 @@ class MyWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: ListView(
-        children: [
-          CustomExspansionWidget(),
+        children: const [
+          CustomExspansionWidget(
+            nested: true,
+            title: Text('Text'),
+            subtitle: Text('Text 1'),
+            trailing: Text('-------'),
+            children: [
+              CustomExspansionWidget(
+                nested: true,
+              ),
+              CustomExspansionWidget(nested: false)
+            ],
+          ),
         ],
       ),
     );

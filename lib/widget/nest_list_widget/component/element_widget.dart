@@ -11,6 +11,7 @@ import 'package:izb_ui/provider/mode_provider.dart';
 import 'package:izb_ui/provider/node_provider.dart';
 import 'package:izb_ui/provider/node_type_provider.dart';
 import 'package:izb_ui/theme/theme.dart';
+import 'package:izb_ui/widget/custom_expansion_tile.dart';
 import 'package:izb_ui/widget/nest_list_widget/component/horizontal_option.dart';
 import 'package:izb_ui/widget/nest_list_widget/nest_list_widget.dart';
 import 'package:izb_ui/widget/streets_widget.dart';
@@ -90,6 +91,21 @@ class ElementWidget extends HookConsumerWidget {
           }),
       _ => Text(node.nodeName),
     };
+
+    return GestureDetector(
+      onTap: () {
+        ref.read(commonProvider).setDefault();
+      },
+      child: CustomExspansionWidget(
+        nested: node.nested || node.streetsUuid != null,
+        title: name,
+        subtitle: createField,
+        trailing: HorizontalOption(node),
+        children: node.streetsUuid != null
+            ? [StreetsWidget(uuid: node.streetsUuid ?? '')]
+            : [NestListWidget(pId: node.nodeId)],
+      ),
+    );
 
     if (node.nested || node.streetsUuid != null) {
       return ExpansionTile(
