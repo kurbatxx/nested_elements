@@ -26,9 +26,9 @@ class BuildingsWidget extends ConsumerWidget {
               )
           ],
         ),
-        UnconstrainedBox(
-          child: FilledButton(onPressed: () {}, child: const Text('Жми')),
-        )
+        // UnconstrainedBox(
+        //   child: FilledButton(onPressed: () {}, child: const Text('Жми')),
+        // )
       ]),
       error: (_, __) => const Text('Ошибка'),
       loading: () => const Padding(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:izb_ui/provider/streets_provider.dart';
+import 'package:izb_ui/widget/buildings_widget.dart';
 import 'package:izb_ui/widget/custom_expansion_tile.dart';
 
 class StreetsWidget extends ConsumerWidget {
@@ -23,8 +24,9 @@ class StreetsWidget extends ConsumerWidget {
           final street = data[index];
 
           return CustomExspansionWidget(
-            nested: false,
+            nested: street.nested,
             title: Text(street.streetName),
+            children: [BuildingsWidget(sId: street.streetId)],
           );
         },
       ),

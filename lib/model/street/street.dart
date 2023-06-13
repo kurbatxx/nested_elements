@@ -12,11 +12,13 @@ class Street with StreetMappable {
   final int streetId;
   final String streetUuid;
   final String streetName;
+  final bool nested;
 
   Street({
     @MappableField(key: 'street_id') required this.streetId,
     @MappableField(key: 'street_uuid') required this.streetUuid,
     @MappableField(key: 'street_name') required this.streetName,
+    @MappableField(key: 'nested') required this.nested,
   });
 
   static const fromMap = StreetMapper.fromMap;

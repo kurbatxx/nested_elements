@@ -14,7 +14,7 @@ final buildingsProvider =
 
   List<dynamic> jsonList = json.decode(utf8.decode(response.bodyBytes)) as List;
   List<Building> buildings =
-      jsonList.map((e) => BuildingMapper.fromJson(e)).toList();
+      jsonList.map((e) => BuildingMapper.fromMap(e)).toList();
 
   return buildings;
 });
