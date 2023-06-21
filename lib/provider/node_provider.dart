@@ -60,4 +60,29 @@ class AsyncNodesNotifier extends FamilyAsyncNotifier<List<Node>, int> {
 
     ref.read(loadingStateProvider.notifier).state = false;
   }
+
+  Future<void> addNode(int pId, String name) async {
+    ref.read(loadingStateProvider.notifier).state = true;
+
+    await Future.delayed(const Duration(seconds: 1));
+
+    Uri url = Uri.http(ref.read(ipProvider), '/create_node');
+    await http.post(
+      url,
+      headers: {"Content-Type": "application/json"},
+      body: json.encode({"parrent_id": pId, "node_name": name}),
+    );
+
+    Uri nodesUrl = Uri.http(ref.read(ipProvider), '/node_with_nest/$pId');
+    final response = await http.get(nodesUrl);
+
+    List<dynamic> jsonList =
+        json.decode(utf8.decode(response.bodyBytes)) as List;
+    final res = jsonList.map((e) => NodeMapper.fromMap(e)).toList();
+
+    final asyncList = AsyncValue.data(res);
+
+    state = asyncList;
+    ref.read(loadingStateProvider.notifier).state = false;
+  }
 }

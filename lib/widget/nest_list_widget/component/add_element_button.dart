@@ -4,7 +4,11 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:izb_ui/api/api.dart';
 import 'package:izb_ui/enum/mode.dart';
 import 'package:izb_ui/provider/loading_state_provider.dart';
+import 'package:izb_ui/provider/mode_provider.dart';
+import 'package:izb_ui/provider/node_provider.dart';
 import 'package:izb_ui/theme/theme.dart';
+
+import '../../../model/node/node.dart';
 
 class AddElementButton extends HookConsumerWidget {
   const AddElementButton(this.pId, {super.key});
@@ -19,10 +23,13 @@ class AddElementButton extends HookConsumerWidget {
     final mode = useState(Mode.noEdit);
 
     final focus = useFocusNode();
+    final hasSubmit = useState(false);
 
     focus.addListener(() {
       if (!focus.hasFocus) {
-        mode.value = Mode.noEdit;
+        if (!hasSubmit.value) {
+          mode.value = Mode.noEdit;
+        }
       }
     });
 
@@ -32,11 +39,13 @@ class AddElementButton extends HookConsumerWidget {
         Mode.create => TextFormField(
             controller: editcontroller,
             onFieldSubmitted: (value) async => {
+              hasSubmit.value = true,
               await ref
-                  .read(apiProvider)
-                  .createElement(pId, editcontroller.text),
+                  .read(nodeProvider(pId).notifier)
+                  .addNode(pId, editcontroller.text),
               editcontroller.clear(),
               mode.value = Mode.noEdit,
+              hasSubmit.value = false
             },
             decoration: crInputDec('Введите название элемента', isLoading),
             autofocus: true,

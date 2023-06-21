@@ -6,6 +6,7 @@ import 'package:izb_ui/model/node/node.dart';
 import 'package:izb_ui/model/remove/remove.dart';
 import 'package:izb_ui/provider/ip_provider.dart';
 import 'package:http/http.dart' as http;
+import 'package:izb_ui/provider/loading_state_provider.dart';
 import 'package:izb_ui/provider/node_provider.dart';
 import 'package:izb_ui/provider/streets_provider.dart';
 
@@ -16,7 +17,9 @@ class Api {
   const Api(this.ref);
 
   Future<void> createElement(int pId, String name) async {
-    await Future.delayed(const Duration(seconds: 1));
+    ref.read(loadingStateProvider.notifier).state = true;
+
+    await Future.delayed(const Duration(seconds: 5));
 
     final url = Uri.http(ref.read(ipProvider), '/create_node');
     await http.post(
@@ -25,7 +28,7 @@ class Api {
       body: json.encode({"parrent_id": pId, "node_name": name}),
     );
 
-    final _ = ref.refresh(nodeProvider(pId));
+    ref.read(loadingStateProvider.notifier).state = false;
   }
 
   Future<void> createNestElement(Node node, String name) async {
@@ -49,7 +52,7 @@ class Api {
     final response = await http.post(url);
 
     Remove remove =
-        RemoveMapper.fromJson(json.decode(utf8.decode(response.bodyBytes)));
+        RemoveMapper.fromMap(json.decode(utf8.decode(response.bodyBytes)));
 
     if (remove.count == 0) {
       final _ = ref.refresh(nodeProvider(remove.parrentId));
@@ -93,25 +96,5 @@ class Api {
       ref.invalidate(nodeProvider(element.nodeId));
       return;
     }
-
-    // switch (element.runtimeType) {
-    //   case Node:
-    //     element as Node;
-    //     await http.post(
-    //       url,
-    //       headers: {"Content-Type": "application/json"},
-    //       body: json.encode({"node_id": element.nodeId, "node_name": name}),
-    //     );
-
-    //     final _ = ref.refresh(nodeProvider(element.parrentId));
-    //     ref.invalidate(nodeProvider(element.nodeId));
-    //   case Street:
-    //     element as Street;
-
-    //   case Building:
-    //     element as Building;
-    //   default:
-    //     print("Нет, совпадений");
-    // }
   }
 }
