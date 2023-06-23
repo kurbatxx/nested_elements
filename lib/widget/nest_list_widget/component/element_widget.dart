@@ -8,7 +8,7 @@ import 'package:izb_ui/model/node/node.dart';
 import 'package:izb_ui/provider/common_provider.dart';
 import 'package:izb_ui/provider/loading_state_provider.dart';
 import 'package:izb_ui/provider/mode_provider.dart';
-import 'package:izb_ui/provider/node_provider.dart';
+import 'package:izb_ui/provider/node_list_provider.dart';
 import 'package:izb_ui/provider/node_type_provider.dart';
 import 'package:izb_ui/theme/theme.dart';
 import 'package:izb_ui/widget/custom_expansion_tile.dart';
@@ -30,12 +30,17 @@ class ElementWidget extends HookConsumerWidget {
     final textController = useTextEditingController(text: node.nodeName);
     final focus = useFocusNode();
 
+    final hasSubmit = useState(false);
+
     final createController = useTextEditingController(text: '');
 
     useEffect(() {
       if (!focus.hasFocus && mode != Mode.edit) {
         textController.text = node.nodeName;
         createController.text = '';
+        if (!hasSubmit.value) {
+          mode == Mode.noEdit;
+        }
       }
 
       return null;
@@ -52,12 +57,13 @@ class ElementWidget extends HookConsumerWidget {
               },
               isLoading),
           onFieldSubmitted: (_) {
+            hasSubmit.value = true;
             switch (nodeType) {
               case NodeType.node:
                 {
                   ref
-                      .read(apiProvider)
-                      .createNestElement(node, createController.text);
+                      .read(nodeListProvider(node.nodeId).notifier)
+                      .createNestedNode(node, createController.text);
                 }
               case NodeType.street:
                 {
@@ -69,6 +75,7 @@ class ElementWidget extends HookConsumerWidget {
                 {}
             }
             ref.read(commonProvider).setDefault();
+            hasSubmit.value = false;
           },
           autofocus: true,
           focusNode: focus,
@@ -86,8 +93,8 @@ class ElementWidget extends HookConsumerWidget {
             textController.text = value;
 
             ref
-                .read(nodeProvider(node.parrentId).notifier)
-                .updateName(node, textController.text);
+                .read(nodeListProvider(node.parrentId).notifier)
+                .updateNodeName(node, textController.text);
           }),
       _ => Text(node.nodeName),
     };

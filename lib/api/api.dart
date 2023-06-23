@@ -7,7 +7,7 @@ import 'package:izb_ui/model/remove/remove.dart';
 import 'package:izb_ui/provider/ip_provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:izb_ui/provider/loading_state_provider.dart';
-import 'package:izb_ui/provider/node_provider.dart';
+import 'package:izb_ui/provider/node_list_provider.dart';
 import 'package:izb_ui/provider/streets_provider.dart';
 
 final apiProvider = Provider((ref) => Api(ref));
@@ -41,24 +41,11 @@ class Api {
       body: json.encode({"parrent_id": node.nodeId, "node_name": name}),
     );
 
-    final _ = ref.refresh(nodeProvider(node.parrentId));
-    ref.invalidate(nodeProvider(node.nodeId));
+    final _ = ref.refresh(nodeListProvider(node.parrentId));
+    ref.invalidate(nodeListProvider(node.nodeId));
   }
 
-  Future<void> dropElement(Node node) async {
-    await Future.delayed(const Duration(seconds: 1));
-
-    final url = Uri.http(ref.read(ipProvider), '/drop_node/${node.nodeId}');
-    final response = await http.post(url);
-
-    Remove remove =
-        RemoveMapper.fromMap(json.decode(utf8.decode(response.bodyBytes)));
-
-    if (remove.count == 0) {
-      final _ = ref.refresh(nodeProvider(remove.parrentId));
-    }
-    final _ = ref.refresh(nodeProvider(node.parrentId));
-  }
+  
 
   Future<void> createStreet(Node node, String name) async {
     await Future.delayed(const Duration(seconds: 1));
@@ -70,7 +57,7 @@ class Api {
       body: json.encode({"node_id": node.nodeId, "street_name": name}),
     );
 
-    final _ = ref.refresh(nodeProvider(node.parrentId));
+    final _ = ref.refresh(nodeListProvider(node.parrentId));
     if (node.streetsUuid != null) {
       final _ = ref.refresh(streetsProvider(node.streetsUuid!));
     }
@@ -92,8 +79,8 @@ class Api {
         }),
       );
 
-      final _ = ref.refresh(nodeProvider(element.parrentId));
-      ref.invalidate(nodeProvider(element.nodeId));
+      final _ = ref.refresh(nodeListProvider(element.parrentId));
+      ref.invalidate(nodeListProvider(element.nodeId));
       return;
     }
   }

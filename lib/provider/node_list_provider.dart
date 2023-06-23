@@ -4,10 +4,11 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:izb_ui/enum/node_type.dart';
 import 'package:izb_ui/model/node/node.dart';
 import 'package:http/http.dart' as http;
+import 'package:izb_ui/model/remove/remove.dart';
 import 'package:izb_ui/provider/ip_provider.dart';
 import 'package:izb_ui/provider/loading_state_provider.dart';
 
-final nodeProvider =
+final nodeListProvider =
     AsyncNotifierProvider.family<AsyncNodesNotifier, List<Node>, int>(
         AsyncNodesNotifier.new);
 
@@ -25,7 +26,7 @@ class AsyncNodesNotifier extends FamilyAsyncNotifier<List<Node>, int> {
     return jsonList.map((e) => NodeMapper.fromMap(e)).toList();
   }
 
-  Future<void> updateName(Node element, String name) async {
+  Future<void> updateNodeName(Node element, String name) async {
     ref.read(loadingStateProvider.notifier).state = true;
 
     await Future.delayed(const Duration(seconds: 1));
@@ -73,16 +74,43 @@ class AsyncNodesNotifier extends FamilyAsyncNotifier<List<Node>, int> {
       body: json.encode({"parrent_id": pId, "node_name": name}),
     );
 
-    Uri nodesUrl = Uri.http(ref.read(ipProvider), '/node_with_nest/$pId');
-    final response = await http.get(nodesUrl);
+    state = AsyncValue.data(await build(arg));
+    ref.read(loadingStateProvider.notifier).state = false;
+  }
 
-    List<dynamic> jsonList =
-        json.decode(utf8.decode(response.bodyBytes)) as List;
-    final res = jsonList.map((e) => NodeMapper.fromMap(e)).toList();
+  Future<void> dropNode(Node node) async {
+    ref.read(loadingStateProvider.notifier).state = true;
+    await Future.delayed(const Duration(seconds: 1));
 
-    final asyncList = AsyncValue.data(res);
+    final url = Uri.http(ref.read(ipProvider), '/drop_node/${node.nodeId}');
+    final response = await http.post(url);
 
-    state = asyncList;
+    Remove remove =
+        RemoveMapper.fromMap(json.decode(utf8.decode(response.bodyBytes)));
+
+    if (remove.count == 0) {
+      final _ = ref.refresh(nodeListProvider(node.parrentId));
+    }
+
+    state = AsyncValue.data(await build(arg));
+    ref.read(loadingStateProvider.notifier).state = false;
+  }
+
+  Future<void> createNestedNode(Node node, String name) async {
+    print('!!!');
+    ref.read(loadingStateProvider.notifier).state = true;
+    await Future.delayed(const Duration(seconds: 1));
+
+    final url = Uri.http(ref.read(ipProvider), '/create_node');
+    await http.post(
+      url,
+      headers: {"Content-Type": "application/json"},
+      body: json.encode({"parrent_id": node.nodeId, "node_name": name}),
+    );
+
+    state = AsyncValue.data(await build(arg));
+    // final _ = ref.refresh(nodeListProvider(node.parrentId));
+    // ref.invalidate(nodeListProvider(node.nodeId));
     ref.read(loadingStateProvider.notifier).state = false;
   }
 }

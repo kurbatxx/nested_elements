@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:izb_ui/provider/node_provider.dart';
+import 'package:izb_ui/provider/node_list_provider.dart';
 import 'package:izb_ui/widget/nest_list_widget/component/add_element_button.dart';
 import 'package:izb_ui/widget/nest_list_widget/component/element_widget.dart';
 
@@ -14,7 +14,7 @@ class NestListWidget extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final root = ref.watch(nodeProvider(pId));
+    final root = ref.watch(nodeListProvider(pId));
 
     return root.when(
       data: (data) => ListView.builder(

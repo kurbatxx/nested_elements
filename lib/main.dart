@@ -15,23 +15,24 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(
+        useMaterial3: true,
+      ),
       routes: {
-        '/test': (context) => MyWidget(),
+        '/test': (context) => const MyWidget(),
       },
       home: Scaffold(
         appBar: AppBar(
           title: const Text('Выберите элемент'),
           actions: [
-            Builder(
-              builder: (context) {
-                return ElevatedButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, "/test");
-                  },
-                  child: const Text(''),
-                );
-              }
-            )
+            Builder(builder: (context) {
+              return ElevatedButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, "/test");
+                },
+                child: const Text(''),
+              );
+            })
           ],
         ),
         body: const NestListWidget(pId: 0),
