@@ -1,5 +1,3 @@
-import 'dart:math' show pi;
-
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -39,12 +37,9 @@ class CustomExspansionWidget extends HookConsumerWidget {
             mainAxisSize: MainAxisSize.max,
             children: [
               nest.value
-                  ? expended.value
-                      ? Transform.rotate(
-                          angle: pi / 2,
-                          child: CustomIconButton(expended: expended),
-                        )
-                      : CustomIconButton(expended: expended)
+                  ? RotateButtonIcon(
+                      onPressed: () {},
+                    )
                   : const SizedBox.square(
                       dimension: 40,
                     ),
@@ -74,22 +69,50 @@ class CustomExspansionWidget extends HookConsumerWidget {
   }
 }
 
-class CustomIconButton extends StatelessWidget {
-  const CustomIconButton({
-    super.key,
-    required this.expended,
-  });
+class RotateButtonIcon extends StatefulWidget {
+  final VoidCallback? onPressed;
 
-  final ValueNotifier<bool> expended;
+  const RotateButtonIcon({super.key, required this.onPressed});
+
+  @override
+  State<RotateButtonIcon> createState() => _RotateButtonIconState();
+}
+
+class _RotateButtonIconState extends State<RotateButtonIcon>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+  late final Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+        duration: const Duration(milliseconds: 100), vsync: this);
+    _animation = Tween(begin: 0.75, end: 1.0)
+        .animate(CurvedAnimation(parent: _controller, curve: Curves.linear));
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(
-      splashRadius: 16.0,
-      icon: const Icon(Icons.chevron_right),
-      onPressed: () {
-        expended.value = !expended.value;
-      },
+    return RotationTransition(
+      turns: _animation,
+      child: IconButton(
+        icon: const Icon(Icons.expand_more),
+        onPressed: () {
+          widget.onPressed;
+          if (_controller.isDismissed) {
+            _controller.forward();
+          } else {
+            _controller.reverse();
+          }
+        },
+      ),
     );
   }
 }
