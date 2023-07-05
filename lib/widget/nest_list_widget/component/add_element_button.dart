@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:izb_ui/api/api.dart';
 import 'package:izb_ui/enum/mode.dart';
 import 'package:izb_ui/provider/loading_state_provider.dart';
-import 'package:izb_ui/provider/mode_provider.dart';
 import 'package:izb_ui/provider/node_list_provider.dart';
 import 'package:izb_ui/theme/theme.dart';
-
-import '../../../model/node/node.dart';
 
 class AddElementButton extends HookConsumerWidget {
   const AddElementButton(this.pId, {super.key});
@@ -42,7 +38,7 @@ class AddElementButton extends HookConsumerWidget {
               hasSubmit.value = true,
               await ref
                   .read(nodeListProvider(pId).notifier)
-                  .addNode(pId, editcontroller.text),
+                  .addNode(editcontroller.text),
               editcontroller.clear(),
               mode.value = Mode.noEdit,
               hasSubmit.value = false

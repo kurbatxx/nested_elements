@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:izb_ui/widget/nest_list_widget/nest_list_widget.dart';
-import 'package:izb_ui/widget/t_widget.dart';
 
 void main() {
   runApp(
@@ -18,22 +17,10 @@ class MainApp extends StatelessWidget {
       theme: ThemeData(
         useMaterial3: true,
       ),
-      routes: {
-        '/test': (context) => const MyWidget(),
-      },
       home: Scaffold(
         appBar: AppBar(
           title: const Text('Выберите элемент'),
-          actions: [
-            Builder(builder: (context) {
-              return ElevatedButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, "/test");
-                },
-                child: const Text(''),
-              );
-            })
-          ],
+          actions: const [],
         ),
         body: const NestListWidget(pId: 0),
       ),
