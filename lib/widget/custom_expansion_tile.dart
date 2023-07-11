@@ -21,8 +21,6 @@ class CustomExspansionWidget extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final expended = useState(false);
-    final nest = useState(nested);
-
     return Container(
       decoration: BoxDecoration(
           border: Border.all(
@@ -36,7 +34,7 @@ class CustomExspansionWidget extends HookConsumerWidget {
           Row(
             mainAxisSize: MainAxisSize.max,
             children: [
-              nest.value
+              nested
                   ? RotateButtonIcon(
                       onPressed: () {},
                     )
