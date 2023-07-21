@@ -29,7 +29,7 @@ class HorizontalOption extends HookConsumerWidget {
             ),
           Menu.show => Row(
               children: [
-                if (!node.nested)
+                if (!node.hasNest)
                   FilledButton(
                     onPressed: () {
                       ref
@@ -52,7 +52,7 @@ class HorizontalOption extends HookConsumerWidget {
                   },
                   child: const Text('Редактировать'),
                 ),
-                if (!node.nested)
+                if (!node.hasNest)
                   FilledButton(
                     onPressed: () {
                       ref

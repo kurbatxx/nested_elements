@@ -24,6 +24,8 @@ class StreetsWidget extends ConsumerWidget {
           final street = data[index];
 
           return CustomExspansionWidget(
+            isOpen: false,
+            id: street.streetId,
             nested: street.nested,
             title: Text(street.streetName),
             children: [BuildingsWidget(sId: street.streetId)],

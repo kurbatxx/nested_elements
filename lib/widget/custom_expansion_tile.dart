@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:izb_ui/model/node/node.dart';
+import 'package:izb_ui/provider/open_elements_id_provider.dart';
+import 'package:izb_ui/widget/nest_list_widget/component/expanded_section.dart';
+import 'package:izb_ui/widget/nest_list_widget/component/rotate_button_icon.dart';
+import 'package:izb_ui/widget/nest_list_widget/nest_list_widget.dart';
 
 class CustomExspansionWidget extends HookConsumerWidget {
   const CustomExspansionWidget({
     super.key,
     required this.nested,
+    required this.id,
+    required this.isOpen,
     this.title,
     this.subtitle,
     this.trailing,
@@ -17,10 +23,11 @@ class CustomExspansionWidget extends HookConsumerWidget {
   final Widget? trailing;
   final List<Widget>? children;
   final bool nested;
+  final int id;
+  final bool isOpen;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final expended = useState(false);
     return Container(
       decoration: BoxDecoration(
           border: Border.all(
@@ -36,7 +43,8 @@ class CustomExspansionWidget extends HookConsumerWidget {
             children: [
               nested
                   ? RotateButtonIcon(
-                      onPressed: () {},
+                      isOpen: isOpen,
+                      id: id,
                     )
                   : const SizedBox.square(
                       dimension: 40,
@@ -54,62 +62,16 @@ class CustomExspansionWidget extends HookConsumerWidget {
               trailing ?? const SizedBox()
             ],
           ),
-          if (expended.value)
-            Padding(
-              padding: const EdgeInsets.only(left: 16.0),
-              child: Column(
-                children: children ?? [],
-              ),
-            ),
+          ExpandedSection(
+            expand: isOpen,
+            child: isOpen
+                ? Padding(
+                    padding: const EdgeInsets.only(left: 40.0),
+                    child: NestListWidget(parrentId: id),
+                  )
+                : const SizedBox(),
+          ),
         ],
-      ),
-    );
-  }
-}
-
-class RotateButtonIcon extends StatefulWidget {
-  final VoidCallback? onPressed;
-
-  const RotateButtonIcon({super.key, required this.onPressed});
-
-  @override
-  State<RotateButtonIcon> createState() => _RotateButtonIconState();
-}
-
-class _RotateButtonIconState extends State<RotateButtonIcon>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _controller;
-  late final Animation<double> _animation;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-        duration: const Duration(milliseconds: 100), vsync: this);
-    _animation = Tween(begin: 0.75, end: 1.0)
-        .animate(CurvedAnimation(parent: _controller, curve: Curves.linear));
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _controller.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return RotationTransition(
-      turns: _animation,
-      child: IconButton(
-        icon: const Icon(Icons.expand_more),
-        onPressed: () {
-          widget.onPressed;
-          if (_controller.isDismissed) {
-            _controller.forward();
-          } else {
-            _controller.reverse();
-          }
-        },
       ),
     );
   }

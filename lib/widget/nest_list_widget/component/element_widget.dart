@@ -10,6 +10,7 @@ import 'package:izb_ui/provider/loading_state_provider.dart';
 import 'package:izb_ui/provider/mode_provider.dart';
 import 'package:izb_ui/provider/node_list_provider.dart';
 import 'package:izb_ui/provider/node_type_provider.dart';
+import 'package:izb_ui/provider/open_elements_id_provider.dart';
 import 'package:izb_ui/theme/theme.dart';
 import 'package:izb_ui/widget/custom_expansion_tile.dart';
 import 'package:izb_ui/widget/nest_list_widget/component/horizontal_option.dart';
@@ -104,13 +105,15 @@ class ElementWidget extends HookConsumerWidget {
         ref.read(commonProvider).setDefault();
       },
       child: CustomExspansionWidget(
-        nested: node.nested || node.streetsUuid != null,
+        id: node.nodeId,
+        nested: node.hasNest || node.streetsUuid != null,
+        isOpen: ref.watch(openElemetsIdProvider).contains(node.nodeId),
         title: name,
         subtitle: createField,
         trailing: HorizontalOption(node),
         children: node.streetsUuid != null
             ? [StreetsWidget(uuid: node.streetsUuid ?? '')]
-            : [NestListWidget(pId: node.nodeId)],
+            : [NestListWidget(parrentId: node.nodeId)],
       ),
     );
   }

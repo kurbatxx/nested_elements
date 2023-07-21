@@ -1,10 +1,3 @@
-// {
-//     "node_id": 19,
-//     "parrent_id": 16,
-//     "node_name": "Петропавловск",
-//     "nested": false
-//   },
-
 import 'package:dart_mappable/dart_mappable.dart';
 part 'node.mapper.dart';
 
@@ -14,14 +7,14 @@ class Node with NodeMappable {
   final int parrentId;
   final String nodeName;
   final String? streetsUuid;
-  final bool nested;
+  final bool hasNest;
 
   Node({
     @MappableField(key: 'node_id') required this.nodeId,
     @MappableField(key: 'parrent_id') required this.parrentId,
     @MappableField(key: 'node_name') required this.nodeName,
     @MappableField(key: 'streets_uuid') required this.streetsUuid,
-    required this.nested,
+    @MappableField(key: 'has_nest') required this.hasNest,
   });
 
   static const fromMap = NodeMapper.fromMap;

@@ -20,7 +20,7 @@ class AsyncNodesNotifier extends FamilyAsyncNotifier<List<Node>, int> {
     await Future.delayed(const Duration(seconds: 1));
 
     final pId = arg;
-    final url = Uri.http(ref.read(ipProvider), '/node_with_nest/$pId');
+    final url = Uri.http(ref.read(ipProvider), '/get_nodes/$pId');
     final response = await http.get(url);
 
     List<dynamic> jsonList =
@@ -86,11 +86,6 @@ class AsyncNodesNotifier extends FamilyAsyncNotifier<List<Node>, int> {
     Remove _remove =
         RemoveMapper.fromMap(json.decode(utf8.decode(response.bodyBytes)));
 
-    // if (remove.count == 0) {
-    //   final _ = ref.refresh(nodeListProvider(node.parrentId));
-    // }
-
-    // state = await AsyncValue.guard(() => build(arg));
     dev.log('${node.parrentId}');
     state = await AsyncValue.guard(() async => await build(node.parrentId));
     ref.read(loadingStateProvider.notifier).state = false;
