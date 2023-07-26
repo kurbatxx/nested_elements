@@ -44,8 +44,6 @@ class Api {
     ref.invalidate(nodeListProvider(node.nodeId));
   }
 
-  
-
   Future<void> createStreet(Node node, String name) async {
     await Future.delayed(const Duration(seconds: 1));
 
@@ -57,8 +55,8 @@ class Api {
     );
 
     final _ = ref.refresh(nodeListProvider(node.parrentId));
-    if (node.streetsUuid != null) {
-      final _ = ref.refresh(streetsProvider(node.streetsUuid!));
+    if (node.deputatUuid != null) {
+      final _ = ref.refresh(streetsProvider(node.deputatUuid!));
     }
   }
 
@@ -73,8 +71,8 @@ class Api {
         headers: {"Content-Type": "application/json"},
         body: json.encode({
           "node_id": element.nodeId,
-          "object": NodeType.node.name,
-          "name": name
+          "object": NodeType.address.name,
+          "name": name,
         }),
       );
 

@@ -19,8 +19,8 @@ class AsyncNodesNotifier extends FamilyAsyncNotifier<List<Node>, int> {
   Future<List<Node>> build(int arg) async {
     await Future.delayed(const Duration(seconds: 1));
 
-    final pId = arg;
-    final url = Uri.http(ref.read(ipProvider), '/get_nodes/$pId');
+    final parrentId = arg;
+    final url = Uri.http(ref.read(ipProvider), '/get_nodes/$parrentId');
     final response = await http.get(url);
 
     List<dynamic> jsonList =
@@ -39,7 +39,7 @@ class AsyncNodesNotifier extends FamilyAsyncNotifier<List<Node>, int> {
       headers: {"Content-Type": "application/json"},
       body: json.encode({
         "node_id": element.nodeId,
-        "object": NodeType.node.name,
+        "object": NodeType.address.name,
         "name": name
       }),
     );
@@ -63,17 +63,22 @@ class AsyncNodesNotifier extends FamilyAsyncNotifier<List<Node>, int> {
     ref.read(loadingStateProvider.notifier).state = false;
   }
 
-  Future<void> addNode(String name) async {
+  Future<void> createNode({
+    required int parrentId,
+    required String name,
+    required NodeType type,
+  }) async {
     ref.read(loadingStateProvider.notifier).state = true;
 
     Uri url = Uri.http(ref.read(ipProvider), '/create_node');
     await http.post(
       url,
       headers: {"Content-Type": "application/json"},
-      body: json.encode({"parrent_id": 0, "node_name": name}),
+      body: json.encode(
+          {"parrent_id": parrentId, "node_name": name, "node_type": type.name}),
     );
     dev.log('+++++++++');
-    state = await AsyncValue.guard(() async => await build(0));
+    state = await AsyncValue.guard(() async => await build(parrentId));
     ref.read(loadingStateProvider.notifier).state = false;
   }
 

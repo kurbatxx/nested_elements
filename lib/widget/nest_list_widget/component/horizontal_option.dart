@@ -25,50 +25,52 @@ class HorizontalOption extends HookConsumerWidget {
               onPressed: () {
                 ref.read(menuProvider(node).notifier).show();
               },
-              child: const Text('option'),
+              child: const Text('+'),
             ),
-          Menu.show => Row(
-              children: [
-                if (!node.hasNest)
-                  FilledButton(
-                    onPressed: () {
-                      ref
-                          .read(modeProvider(node).notifier)
-                          .setCreate(type: NodeType.street);
-                    },
-                    child: const Text('Добавить улицу'),
-                  ),
-                FilledButton(
-                  onPressed: () {
-                    ref
-                        .read(modeProvider(node).notifier)
-                        .setCreate(type: NodeType.node);
-                  },
-                  child: const Text('Создать подкаталог'),
-                ),
-                FilledButton(
-                  onPressed: () {
-                    ref.read(modeProvider(node).notifier).setEdit();
-                  },
-                  child: const Text('Редактировать'),
-                ),
-                if (!node.hasNest)
-                  FilledButton(
-                    onPressed: () {
-                      ref
-                          .read(nodeListProvider(node.parrentId).notifier)
-                          .dropNode(node);
-                    },
-                    child: const Text('Удалить'),
-                  ),
-                FilledButton(
-                  onPressed: () {
-                    ref.read(menuProvider(node).notifier).hide();
-                  },
-                  child: const Text('Скрыть'),
-                )
-              ],
-            ),
+          Menu.show => switch (node.type) {
+              NodeType.address => Row(),
+              NodeType.building => Row(),
+              NodeType.street => Row(),
+            }
+
+          // if (!node.hasNest)
+          //   FilledButton(
+          //     onPressed: () {
+          //       ref
+          //           .read(modeProvider(node).notifier)
+          //           .setCreate(type: NodeType.street);
+          //     },
+          //     child: const Text('Добавить улицу'),
+          //   ),
+          // FilledButton(
+          //   onPressed: () {
+          //     ref
+          //         .read(modeProvider(node).notifier)
+          //         .setCreate(type: NodeType.address);
+          //   },
+          //   child: const Text('Создать подкаталог'),
+          // ),
+          // FilledButton(
+          //   onPressed: () {
+          //     ref.read(modeProvider(node).notifier).setEdit();
+          //   },
+          //   child: const Text('Редактировать'),
+          // ),
+          // if (!node.hasNest)
+          //   FilledButton(
+          //     onPressed: () {
+          //       ref
+          //           .read(nodeListProvider(node.parrentId).notifier)
+          //           .dropNode(node);
+          //     },
+          //     child: const Text('Удалить'),
+          //   ),
+          // FilledButton(
+          //   onPressed: () {
+          //     ref.read(menuProvider(node).notifier).hide();
+          //   },
+          //   child: const Text('-'),
+          // )
         }
       ],
     );

@@ -52,7 +52,7 @@ class ElementWidget extends HookConsumerWidget {
           controller: createController,
           decoration: crInputDec(
               switch (nodeType) {
-                NodeType.node => 'Введите название подкаталога',
+                NodeType.address => 'Введите название подкаталога',
                 NodeType.street => 'Введите название улицы',
                 _ => '',
               },
@@ -60,17 +60,19 @@ class ElementWidget extends HookConsumerWidget {
           onFieldSubmitted: (_) {
             hasSubmit.value = true;
             switch (nodeType) {
-              case NodeType.node:
+              case NodeType.address:
                 {
-                  ref
-                      .read(nodeListProvider(node.nodeId).notifier)
-                      .createNestedNode(node, createController.text);
+                  ref.read(nodeListProvider(node.nodeId).notifier).createNode(
+                      parrentId: node.nodeId,
+                      name: createController.text,
+                      type: NodeType.address);
                 }
               case NodeType.street:
                 {
-                  ref
-                      .read(apiProvider)
-                      .createStreet(node, createController.text);
+                  ref.read(nodeListProvider(node.nodeId).notifier).createNode(
+                      parrentId: node.nodeId,
+                      name: createController.text,
+                      type: NodeType.street);
                 }
               default:
                 {}
@@ -106,13 +108,13 @@ class ElementWidget extends HookConsumerWidget {
       },
       child: CustomExspansionWidget(
         id: node.nodeId,
-        nested: node.hasNest || node.streetsUuid != null,
+        nested: node.hasNest || node.deputatUuid != null,
         isOpen: ref.watch(openElemetsIdProvider).contains(node.nodeId),
         title: name,
         subtitle: createField,
         trailing: HorizontalOption(node),
-        children: node.streetsUuid != null
-            ? [StreetsWidget(uuid: node.streetsUuid ?? '')]
+        children: node.type == NodeType.street
+            ? [StreetsWidget(uuid: node.deputatUuid ?? '')]
             : [NestListWidget(parrentId: node.nodeId)],
       ),
     );
