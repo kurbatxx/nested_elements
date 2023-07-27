@@ -28,50 +28,124 @@ class HorizontalOption extends HookConsumerWidget {
               child: const Text('+'),
             ),
           Menu.show => switch (node.type) {
-              NodeType.address => Row(),
-              NodeType.building => Row(),
-              NodeType.street => Row(),
+              NodeType.address => Row(
+                  children: [
+                    FilledButton(
+                      onPressed: () {
+                        ref
+                            .read(modeProvider(node).notifier)
+                            .setCreate(type: node.type);
+                      },
+                      child: const Text('Создать подкаталог'),
+                    ),
+                    FilledButton(
+                      onPressed: () {
+                        ref
+                            .read(modeProvider(node).notifier)
+                            .setCreate(type: node.type);
+                      },
+                      child: const Text('Добавить улицу'),
+                    ),
+                    FilledButton(
+                      onPressed: () {
+                        ref.read(modeProvider(node).notifier).setEdit();
+                      },
+                      child: const Text('Редактировать'),
+                    ),
+                    if (!node.hasNest)
+                      FilledButton(
+                        onPressed: () {
+                          ref
+                              .read(nodeListProvider(node.parrentId).notifier)
+                              .dropNode(node);
+                        },
+                        child: const Text('Удалить'),
+                      ),
+                    FilledButton(
+                      onPressed: () {
+                        ref.read(menuProvider(node).notifier).hide();
+                      },
+                      child: const Text('-'),
+                    ),
+                  ],
+                ),
+              NodeType.building => Row(
+                  children: [
+                    FilledButton(
+                      onPressed: () {
+                        ref.read(menuProvider(node).notifier).hide();
+                      },
+                      child: const Text('-'),
+                    )
+                  ],
+                ),
+              NodeType.street => Row(
+                  children: [
+                    FilledButton(
+                      onPressed: () {
+                        ref
+                            .read(modeProvider(node).notifier)
+                            .setCreate(type: NodeType.building);
+                      },
+                      child: const Text('Добавить дом'),
+                    ),
+                    FilledButton(
+                      onPressed: () {
+                        ref.read(modeProvider(node).notifier).setEdit();
+                      },
+                      child: const Text('Редактировать'),
+                    ),
+                    if (!node.hasNest)
+                      FilledButton(
+                        onPressed: () {
+                          ref
+                              .read(nodeListProvider(node.parrentId).notifier)
+                              .dropNode(node);
+                        },
+                        child: const Text('Удалить'),
+                      ),
+                    FilledButton(
+                      onPressed: () {
+                        ref.read(menuProvider(node).notifier).hide();
+                      },
+                      child: const Text('-'),
+                    )
+                  ],
+                ),
             }
-
-          // if (!node.hasNest)
-          //   FilledButton(
-          //     onPressed: () {
-          //       ref
-          //           .read(modeProvider(node).notifier)
-          //           .setCreate(type: NodeType.street);
-          //     },
-          //     child: const Text('Добавить улицу'),
-          //   ),
-          // FilledButton(
-          //   onPressed: () {
-          //     ref
-          //         .read(modeProvider(node).notifier)
-          //         .setCreate(type: NodeType.address);
-          //   },
-          //   child: const Text('Создать подкаталог'),
-          // ),
-          // FilledButton(
-          //   onPressed: () {
-          //     ref.read(modeProvider(node).notifier).setEdit();
-          //   },
-          //   child: const Text('Редактировать'),
-          // ),
-          // if (!node.hasNest)
-          //   FilledButton(
-          //     onPressed: () {
-          //       ref
-          //           .read(nodeListProvider(node.parrentId).notifier)
-          //           .dropNode(node);
-          //     },
-          //     child: const Text('Удалить'),
-          //   ),
-          // FilledButton(
-          //   onPressed: () {
-          //     ref.read(menuProvider(node).notifier).hide();
-          //   },
-          //   child: const Text('-'),
-          // )
-        }
+        },
+        // if (!node.hasNest)
+        //   FilledButton(
+        //     onPressed: () {
+        //       ref
+        //           .read(modeProvider(node).notifier)
+        //           .setCreate(type: NodeType.street);
+        //     },
+        //     child: const Text('Добавить улицу'),
+        //   ),
+        // FilledButton(
+        //   onPressed: () {
+        //     ref
+        //         .read(modeProvider(node).notifier)
+        //         .setCreate(type: NodeType.address);
+        //   },
+        //   child: const Text('Создать подкаталог'),
+        // ),
+        // FilledButton(
+        //   onPressed: () {
+        //     ref.read(modeProvider(node).notifier).setEdit();
+        //   },
+        //   child: const Text('Редактировать'),
+        // ),
+        // if (!node.hasNest)
+        //   FilledButton(
+        //     onPressed: () {
+        //       ref
+        //           .read(nodeListProvider(node.parrentId).notifier)
+        //           .dropNode(node);
+        //     },
+        //     child: const Text('Удалить'),
+        //   ),
       ],
     );
   }

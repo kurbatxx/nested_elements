@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:izb_ui/model/node/node.dart';
-import 'package:izb_ui/provider/open_elements_id_provider.dart';
 import 'package:izb_ui/widget/nest_list_widget/component/expanded_section.dart';
 import 'package:izb_ui/widget/nest_list_widget/component/rotate_button_icon.dart';
-import 'package:izb_ui/widget/nest_list_widget/nest_list_widget.dart';
 
 class CustomExspansionWidget extends HookConsumerWidget {
   const CustomExspansionWidget({
@@ -67,7 +64,10 @@ class CustomExspansionWidget extends HookConsumerWidget {
             child: isOpen
                 ? Padding(
                     padding: const EdgeInsets.only(left: 40.0),
-                    child: NestListWidget(parrentId: id),
+                    //child: NestListWidget(parrentId: id),
+                    child: Column(
+                      children: children ?? [],
+                    ),
                   )
                 : const SizedBox(),
           ),

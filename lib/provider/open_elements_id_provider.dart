@@ -17,6 +17,5 @@ class OpenElemetsIdNotifier extends Notifier<Set<int>> {
     }
 
     state = Set.of(state);
-    print(state);
   }
 }

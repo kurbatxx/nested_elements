@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:izb_ui/widget/nest_list_widget/component/rotate_button_icon.dart';
 import 'package:izb_ui/widget/nest_list_widget/nest_list_widget.dart';
 
 void main() {
@@ -20,11 +19,14 @@ class MainApp extends StatelessWidget {
       ),
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Выберите элемент'),
+          centerTitle: true,
+          title: const Text('Заполните адреса'),
           actions: const [],
         ),
-        body: const NestListWidget(parrentId: 0),
-        //body: RotateButtonIcon(isOpen: false, id: 0),
+        body: const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 2.0),
+          child: NestListWidget(parrentId: 0),
+        ),
       ),
     );
   }

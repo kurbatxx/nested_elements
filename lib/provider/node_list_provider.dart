@@ -4,7 +4,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:izb_ui/enum/node_type.dart';
 import 'package:izb_ui/model/node/node.dart';
 import 'package:http/http.dart' as http;
-import 'package:izb_ui/model/remove/remove.dart';
 import 'package:izb_ui/provider/ip_provider.dart';
 import 'package:izb_ui/provider/loading_state_provider.dart';
 
@@ -77,7 +76,6 @@ class AsyncNodesNotifier extends FamilyAsyncNotifier<List<Node>, int> {
       body: json.encode(
           {"parrent_id": parrentId, "node_name": name, "node_type": type.name}),
     );
-    dev.log('+++++++++');
     state = await AsyncValue.guard(() async => await build(parrentId));
     ref.read(loadingStateProvider.notifier).state = false;
   }
@@ -86,28 +84,10 @@ class AsyncNodesNotifier extends FamilyAsyncNotifier<List<Node>, int> {
     ref.read(loadingStateProvider.notifier).state = true;
 
     final url = Uri.http(ref.read(ipProvider), '/drop_node/${node.nodeId}');
-    final response = await http.post(url);
-
-    Remove _remove =
-        RemoveMapper.fromMap(json.decode(utf8.decode(response.bodyBytes)));
+    final _ = await http.post(url);
 
     dev.log('${node.parrentId}');
     state = await AsyncValue.guard(() async => await build(node.parrentId));
-    ref.read(loadingStateProvider.notifier).state = false;
-  }
-
-  Future<void> createNestedNode(Node node, String name) async {
-    dev.log('CREATE NESTED NODE');
-    ref.read(loadingStateProvider.notifier).state = true;
-
-    final url = Uri.http(ref.read(ipProvider), '/create_node');
-    await http.post(
-      url,
-      headers: {"Content-Type": "application/json"},
-      body: json.encode({"parrent_id": node.nodeId, "node_name": name}),
-    );
-
-    state = await AsyncValue.guard(() async => await build(arg));
     ref.read(loadingStateProvider.notifier).state = false;
   }
 }

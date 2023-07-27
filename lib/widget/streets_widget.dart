@@ -28,7 +28,7 @@ class StreetsWidget extends ConsumerWidget {
             id: street.streetId,
             nested: street.nested,
             title: Text(street.streetName),
-            children: [BuildingsWidget(sId: street.streetId)],
+            children: [BuildingsWidget(parrentId: street.streetId)],
           );
         },
       ),

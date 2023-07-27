@@ -3,7 +3,6 @@ import 'package:izb_ui/enum/mode.dart';
 import 'package:izb_ui/enum/node_type.dart';
 import 'package:izb_ui/model/node/node.dart';
 import 'package:izb_ui/provider/common_provider.dart';
-import 'package:izb_ui/provider/node_type_provider.dart';
 
 class ModeNotifier extends FamilyNotifier<Mode, Node> {
   @override
@@ -26,8 +25,6 @@ class ModeNotifier extends FamilyNotifier<Mode, Node> {
 
   void setCreate({required NodeType type}) {
     ref.read(commonProvider).setDefault();
-    ref.read(nodeTypeProvider.notifier).state = type;
-
     state = Mode.create;
     ref.read(beforeModeProvider.notifier).state = arg;
   }

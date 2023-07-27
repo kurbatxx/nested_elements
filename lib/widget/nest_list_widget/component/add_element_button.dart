@@ -31,7 +31,7 @@ class AddElementButton extends HookConsumerWidget {
     });
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      padding: const EdgeInsets.symmetric(horizontal: 0),
       child: switch (mode.value) {
         Mode.create => TextFormField(
             controller: editcontroller,
